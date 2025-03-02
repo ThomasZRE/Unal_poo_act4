@@ -1,0 +1,67 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Principal",
+            "request": "launch",
+            "mainClass": "Act5.EJ83.Principal",
+            "projectName": "Actividad4_9b4e275f"
+        },
+        {
+            "type": "java",
+            "name": "ActualizarAmigo",
+            "request": "launch",
+            "mainClass": "Act6.ActualizarAmigo",
+            "projectName": "Actividad4_9b4e275f",
+            //"args": ["ppp", "54355"]
+        },
+        {
+            "type": "java",
+            "name": "AgregarAmigo",
+            "request": "launch",
+            "mainClass": "Act6.AgregarAmigo",
+            "projectName": "Actividad4_9b4e275f"
+        },
+        {
+            "type": "java",
+            "name": "EliminarAmigo",
+            "request": "launch",
+            "mainClass": "Act6.EliminarAmigo",
+            "projectName": "Actividad4_9b4e275f",
+            "args": ["ppp"]
+        },
+        {
+            "type": "java",
+            "name": "MostrarAmigos",
+            "request": "launch",
+            "mainClass": "Act6.MostrarAmigos",
+            "projectName": "Actividad4_9b4e275f"
+        },
+        {
+            "type": "java",
+            "name": "Prueba",
+            "request": "launch",
+            "mainClass": "Prueba",
+            "projectName": "Actividad4_9b4e275f"
+        },
+        {
+            "type": "java",
+            "name": "Principal(1)",
+            "request": "launch",
+            "mainClass": "persona.Principal",
+            "projectName": "Actividad4_9b4e275f"
+        }
+    ]
+}
