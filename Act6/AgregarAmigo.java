@@ -12,17 +12,48 @@ import java.io.RandomAccessFile;
 import java.lang.NumberFormatException;
 
 public class AgregarAmigo {
-    public static void main(String[] args) {
+    private String nombreNuevo;
+    private Long numeroNuevo;
+
+    public String getnombreNuevo() {
+        return nombreNuevo;
+    }
+
+    public void setnombreNuevo(String nombreNuevo) {
+        this.nombreNuevo = nombreNuevo;
+    }
+
+
+    public Long getnumeroNuevo() {
+        return numeroNuevo;
+    }
+
+    public void setnumeroNuevo(Long numeroNuevo) {
+        this.numeroNuevo = numeroNuevo;
+    }
+
+
+    /*
+    public AgregarAmigo(String nombreNuevo, Long numeroNuevo) {
+        this.nombreNuevo = nombreNuevo;
+        this.numeroNuevo = numeroNuevo;
+    }
+         */
+
+    public String createContact() {
+        String nombreNumeroString;
+        String nombre;
+        long numero;
+
         try {
-            // Toma un nuevo nombre desde el CLI
-            String nombreNuevo = args[0];
+            if (nombreNuevo == null || nombreNuevo.trim().isEmpty()) {
+                return "Error: el nombre es nulo o vacío";
+            }
 
-            long numeroNuevo = Long.parseLong(args[1]);
+            if (numeroNuevo == null || numeroNuevo <= 0) {
+                return "Error: Número inválido";
+            }
 
-            String nombreNumeroString;
-            String nombre;
-            long numero;
-            int index;
 
             // Objeto file para el archivo donde se guardan los datos
             File file = new File("./Act6/Contactos.txt");
@@ -35,7 +66,6 @@ public class AgregarAmigo {
             // Abre el archivo en modo lectura y escritura
             RandomAccessFile raf = new RandomAccessFile(file, "rw");
             boolean found = false;  // Boooleano para encontrar contacto repetido
-
 
             // Verificamos que no se repitan contactos
             // Caso en que se repite
@@ -50,7 +80,7 @@ public class AgregarAmigo {
                 numero = Long.parseLong(separador[1]);
 
                 // Condicion de repeticion
-                if (nombre == nombreNuevo || numero == numeroNuevo) {
+                if (nombre.equals(nombreNuevo) || numero == numeroNuevo) {
                     found = true;
                     break;
                 }
@@ -67,25 +97,27 @@ public class AgregarAmigo {
                 // Separador de linea (Nueva linea)
                 raf.writeBytes(System.lineSeparator());
 
-                System.out.println(" Amigo agregado. ");
-
                 // Cierra el archivo
                 raf.close();
+
+                return " Amigo agregado. ";
+
             }
             
             else {
                 raf.close();
-                System.out.println("Nombre de la entrada no existe.");
+                return "El contacto ya existe";
             }
-
         } 
         
         catch (IOException ioe) {
-            System.out.println(ioe);
+            return "Error: " + ioe.getMessage();
         }
-
         catch ( NumberFormatException nef) {
-            System.out.println(nef);
+            return "Error: formato de número inválido";
+        }
+        catch (Exception e) {
+            return "Error inesperado: " + e.getMessage();
         }
     }
 }
