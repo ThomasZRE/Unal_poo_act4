@@ -7,252 +7,101 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.NumberFormatException;
+import java.util.ArrayList;
+import java.util.List;
 
 class EliminarAmigo {
-    private String nombreContacto;
-    private Long numeroNuevo;
+    private String nombre;
+    private Long numero;
 
-    public EliminarAmigo(String nombreContacto, Long numeroNuevo) {
-        this.nombreContacto = nombreContacto;
-        this.numeroNuevo = numeroNuevo;
+    public EliminarAmigo(String nombre, Long numero) {
+        this.nombre = nombre;
+        this.numero = numero;
     }
 
-    public void deleteContact() {
-        String nombreNumeroString; // Guarda cada registro durante la lectura
-        String nombre;      // Guarda el nombre del registro
-        long numero;        // Guarda el numero del registro
-        int index;          // Ubica la posición del separador "!"
-
+    public String deleteContact() {
         try {
             // Archivo del cual se va a leer y modificar
 			File file = new File("./Act6/Contactos.txt");
 
 			if (!file.exists()) {
-				file.createNewFile();
+				return "No existe el archivo";
 			}
 
             // Abre en modo lectura y escritura
 			RandomAccessFile raf = new RandomAccessFile(file, "rw");
-			boolean found = false;
+			
+            List<String> contacts = new ArrayList<>();
+            String line;
+
+            while ((line = raf.readLine()) != null) {
+                contacts.add(line);
+            }
+
+            raf.close();
+
+            // Archivo temporal
+            File tmpFile = new File("temp.txt");
+
+            // Abre el archivo en modo lectura y escritura
+            RandomAccessFile rafTemp = new RandomAccessFile(tmpFile, "rw");
+
+            boolean found = false;
 
 			// Verifica si el cnotacto existe
-			while (raf.getFilePointer() < raf.length()) {
+			for (String contact : contacts) {
+                if (contact.contains("!")) {
+                    String[] parts = contact.split("!");
+                    if (parts.length == 2) {
+                        String currentName = parts[0];
+                        Long currentNumber = null;
+                        
+                        try {
+                            currentNumber = Long.parseLong(parts[1]);
+                        } catch (NumberFormatException e) {
+                            // Skip invalid entries
+                            rafTemp.writeBytes(contact + System.lineSeparator());
+                            continue;
+                        }
+                        
+                        // Check if this is the contact to delete
+                        boolean matchesName = nombre != null && !nombre.trim().isEmpty() && 
+                                              currentName.equals(nombre);
+                        boolean matchesNumber = numero != null && currentNumber.equals(numero);
+                        
+                        // Delete if matches either name or number (or both)
+                        if (matchesName || matchesNumber) {
+                            found = true;
+                            // Skip this contact (don't write it)
+                        } else {
+                            rafTemp.writeBytes(contact + System.lineSeparator());
+                        }
+                    } else {
+                        rafTemp.writeBytes(contact + System.lineSeparator());
+                    }
+                } else {
+                    rafTemp.writeBytes(contact + System.lineSeparator());
+                }
+            }
 
-				// Lee el archivo
-				nombreNumeroString = raf.readLine();
+            rafTemp.close();
 
-				// Separa la linea
-				String[] lineSplit = nombreNumeroString.split("!");
-
-				// Separa el nombre y numero
-				nombre = lineSplit[0];
-				numero = Long.parseLong(lineSplit[1]);
-
-				// Condicion para el nombre
-				if (nombre.equals(nombreContacto)) {
-					found = true;
-					break;
-				}
-			}
-
-            // Borra el contacto si se existe en la lista
-			if (found == true) {
-
-				// Archivo temporal
-				File tmpFile = new File("temp.txt");
-
-				// Abre el archivo en modo lectura y escritura
-				RandomAccessFile tmpraf = new RandomAccessFile(tmpFile, "rw");
-
-				// Ajusta el puntero al comienzo
-				raf.seek(0);
-
-				// Lee el archivo original
-				while (raf.getFilePointer() < raf.length()) {
-
-					// Lee cada contacto
-					nombreNumeroString = raf.readLine();
-
-					index = nombreNumeroString.indexOf('!');
-					nombre = nombreNumeroString.substring(
-						0, index);
-
-					// Comprueba el contacto a eliminar
-					if (nombre.equals(nombreContacto)) {
-						continue;
-					}
-
-					// Lo agrega al archivo temporal
-					tmpraf.writeBytes(nombreNumeroString);
-
-					// Agrega el salto de linea
-					tmpraf.writeBytes(
-						System.lineSeparator());
-				}
-
-                // Ya eliminamos el contacto
-				// copiamos el contenido del
-				// archivo temporal al archivo original
-
-				// Ajustamos ambos punteros al comienzo
-				raf.seek(0);
-				tmpraf.seek(0);
-
-				// Copiamos el contenido del temporal al original
-				while (tmpraf.getFilePointer() < tmpraf.length()) {
-					raf.writeBytes(tmpraf.readLine());
-					raf.writeBytes(System.lineSeparator());
-				}
-
-                // Ajusta la longitud del archivo original al temporal
-				raf.setLength(tmpraf.length());
-
-				// Cierra los archivos
-				tmpraf.close();
-				raf.close();
-
-				// Borra el archivo temporal
-				tmpFile.delete();
+            if (file.delete() && tmpFile.renameTo(file)) {
+                if (found) {
+                    return "Contacto eliminado exitosamente";
+                } else {
+                    return "No se encontró el contacto a eliminar";
+                }
+            } else {
+                return "Error al actualizar el archivo";
+            }
                 
-                // Exitosa
-				System.out.println(" Contacto eliminado. ");
-			}
-
-            // En caso de no encontrar el contacto a eliminar
-			else {
-
-				// Cierra el archivo
-				raf.close();
-
-				// Mensaje de error
-				System.out.println(" Contacto" + " no existe. ");
-			}    
+		}
+        catch (IOException e) {
+            return "Error de I/O: " + e.getMessage();
+		}
+        catch (Exception e) {
+            return "Error inesperado: " + e.getMessage();
         }
-
-        catch (IOException ioe) {
-			System.out.println(ioe);
-		}
     }
-    /* 
-	public static void main(String args[])
-	{
-		try {
-			// Guarda el nombre del contacto a eliminar
-			String nombreContacto = args[0];
-
-			String nombreNumeroString;   
-			String nombre; 
-			long numero;
-			int index;
-
-			// Archivo del cual se va a leer y modificar
-			File file = new File("./Act6/Contactos.txt");
-
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-
-			// Abre en modo lectura y escritura
-			RandomAccessFile raf = new RandomAccessFile(file, "rw");
-			boolean found = false;
-
-			// Verifica si el cnotacto existe
-			while (raf.getFilePointer() < raf.length()) {
-
-				// Lee el archivo
-				nombreNumeroString = raf.readLine();
-
-				// Separa la linea
-				String[] lineSplit = nombreNumeroString.split("!");
-
-				// Separa el nombre y numero
-				nombre = lineSplit[0];
-				numero = Long.parseLong(lineSplit[1]);
-
-				// Condicion para el nombre
-				if (nombre.equals(nombreContacto)) {
-					found = true;
-					break;
-				}
-			}
-
-			// Borra el contacto si se existe en la lista
-			if (found == true) {
-
-				// Archivo temporal
-				File tmpFile = new File("temp.txt");
-
-				// Abre el archivo en modo lectura y escritura
-				RandomAccessFile tmpraf = new RandomAccessFile(tmpFile, "rw");
-
-				// Ajusta el puntero al comienzo
-				raf.seek(0);
-
-				// Lee el archivo original
-				while (raf.getFilePointer() < raf.length()) {
-
-					// Lee cada contacto
-					nombreNumeroString = raf.readLine();
-
-					index = nombreNumeroString.indexOf('!');
-					nombre = nombreNumeroString.substring(
-						0, index);
-
-					// Comprueba el contacto a eliminar
-					if (nombre.equals(nombreContacto)) {
-						continue;
-					}
-
-					// Lo agrega al archivo temporal
-					tmpraf.writeBytes(nombreNumeroString);
-
-					// Agrega el salto de linea
-					tmpraf.writeBytes(
-						System.lineSeparator());
-				}
-
-                // Ya eliminamos el contacto
-				// copiamos el contenido del
-				// archivo temporal al archivo original
-
-				// Ajustamos ambos punteros al comienzo
-				raf.seek(0);
-				tmpraf.seek(0);
-
-				// Copiamos el contenido del temporal al original
-				while (tmpraf.getFilePointer() < tmpraf.length()) {
-					raf.writeBytes(tmpraf.readLine());
-					raf.writeBytes(System.lineSeparator());
-				}
-
-                // Ajusta la longitud del archivo original al temporal
-				raf.setLength(tmpraf.length());
-
-				// Cierra los archivos
-				tmpraf.close();
-				raf.close();
-
-				// Borra el archivo temporal
-				tmpFile.delete();
-                
-                // Exitosa
-				System.out.println(" Contacto eliminado. ");
-			}
-
-			// En caso de no encontrar el contacto a eliminar
-			else {
-
-				// Cierra el archivo
-				raf.close();
-
-				// Mensaje de error
-				System.out.println(" Contacto" + " no existe. ");
-			}
-		}
-
-		catch (IOException ioe) {
-			System.out.println(ioe);
-		}
-	}
-        */
 }
