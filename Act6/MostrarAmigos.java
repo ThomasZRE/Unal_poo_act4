@@ -1,10 +1,3 @@
-// Move to the same directory as the java file and run
-// java -cp ..\. Act6.MostrarAmigo
-// or from Actividad4/ run
-// java Act6.MostrarAmigos
-
-// TODO: change comments
-
 package Act6;
 
 import java.io.File;

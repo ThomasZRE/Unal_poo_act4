@@ -1,7 +1,3 @@
-// run with java Act6.MostrarAmigo
-// TODO: Fix update bug
-
-
 package Act6;
 
 import java.io.File;

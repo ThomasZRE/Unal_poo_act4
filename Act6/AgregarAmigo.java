@@ -1,9 +1,3 @@
-// To run this file
-// move to the same directory as the java file and run
-// java -cp ..\. Act6.AgregarAmigo <name> <number>
-// or from Actividad4/ run
-// java Act6.AgregarAmigo <name> <number>
-
 package Act6;
 
 import java.io.File;

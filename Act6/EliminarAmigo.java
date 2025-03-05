@@ -1,7 +1,4 @@
-// run with java Act6.EliminarAmigo
-
 package Act6;
-
 
 import java.io.File;
 import java.io.IOException;
