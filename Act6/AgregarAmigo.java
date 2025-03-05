@@ -19,6 +19,7 @@ public class AgregarAmigo {
         return nombreNuevo;
     }
 
+    
     public void setnombreNuevo(String nombreNuevo) {
         this.nombreNuevo = nombreNuevo;
     }
@@ -28,17 +29,11 @@ public class AgregarAmigo {
         return numeroNuevo;
     }
 
+
     public void setnumeroNuevo(Long numeroNuevo) {
         this.numeroNuevo = numeroNuevo;
     }
 
-
-    /*
-    public AgregarAmigo(String nombreNuevo, Long numeroNuevo) {
-        this.nombreNuevo = nombreNuevo;
-        this.numeroNuevo = numeroNuevo;
-    }
-         */
 
     public String createContact() {
         String nombreNumeroString;

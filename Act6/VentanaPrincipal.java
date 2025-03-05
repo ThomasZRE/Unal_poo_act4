@@ -10,13 +10,14 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     private Container container;
 
     // Labels para nombre y apellidos
-    JLabel nombre, numero, resultado;
+    private JLabel nombre, numero, resultado;
 
     // Campos de texto respectivos
-    JTextField nombreField, numeroField;
+    private JTextField nombreField, numeroField;
 
     // Botones
-    JButton create, read, update, delete;
+    private JButton create, read, update, delete;
+
 
     public VentanaPrincipal() {
         inicio();
@@ -26,6 +27,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false); 
     }
+
 
     private void inicio() {
         container = getContentPane();
@@ -93,9 +95,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     
     }
 
-    // @Override
+
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+
         if (e.getSource() == create) {
             createContact();
         }
@@ -109,6 +111,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             deleteContact();
         }
     }
+
 
     public void createContact() {
         try {
@@ -153,6 +156,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
 
     }
+
+
     public void readContact() {
         MostrarAmigos M = new MostrarAmigos();
         String result = M.displayContact();
@@ -163,6 +168,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             resultado.setText("Mostrando contactos en nueva ventana");
         }
     }
+
 
     public void updateContact() {
         try {
@@ -203,12 +209,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         }
     }
 
+
     public void deleteContact() {
         try {
             String name = nombreField.getText();
             String numText = numeroField.getText();
             
-            // Different validation since we might want to delete by name only
+            // Elimina por nombre
             if (name.trim().isEmpty() && numText.trim().isEmpty()) {
                 resultado.setText("Error: Ingrese al menos nombre o número");
                 return;
@@ -228,7 +235,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             String result = E.deleteContact();
             resultado.setText(result);
             
-            // Clear fields on success
+            // Limpia el campo en caso de exito
             if (result.startsWith("Contacto eliminado")) {
                 nombreField.setText("");
                 numeroField.setText("");
